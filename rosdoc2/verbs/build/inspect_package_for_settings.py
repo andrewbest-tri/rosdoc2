@@ -15,6 +15,7 @@
 import os
 
 from .build_context import BuildContext
+from .builders import create_builder_by_name
 from .create_format_map_from_package import create_format_map_from_package
 from .parse_rosdoc2_yaml import parse_rosdoc2_yaml
 
@@ -128,6 +129,13 @@ def inspect_package_for_settings(package, tool_options):
         rosdoc_config_file = DEFAULT_ROSDOC_CONFIG_FILE.format_map(package_map)
         rosdoc_config_file_name = '<default config>'
 
+    # Extend the file if requested
+    yaml_extend = tool_options.yaml_extend
+    if yaml_extend:
+        if not os.path.isfile(yaml_extend):
+            raise ValueError(
+                f"yaml_extend path '{yaml_extend}' is not a file")
+
     # Parse config file
     build_context = BuildContext(
         configuration_file_path=rosdoc_config_file_name,
@@ -140,4 +148,18 @@ def inspect_package_for_settings(package, tool_options):
         if str(depends) == 'ament_cmake_python':
             build_context.ament_cmake_python = True
 
-    return parse_rosdoc2_yaml(rosdoc_config_file, build_context)
+    (settings_dict, builders_list) = parse_rosdoc2_yaml(rosdoc_config_file, build_context)
+    # if None, python_source is set to either './<package.name>' or 'src/<package.name>'
+    build_context.python_source = settings_dict.get('python_source', None)
+    build_context.always_run_doxygen = settings_dict.get('always_run_doxygen', False)
+    build_context.always_run_sphinx_apidoc = settings_dict.get('always_run_sphinx_apidoc', False)
+    build_context.build_type = settings_dict.get('override_build_type', build_context.build_type)
+
+    builders = []
+    for builder in builders_list:
+        builder_name = next(iter(builder))
+        builders.append(create_builder_by_name(builder_name,
+                                               builder_dict=builder[builder_name],
+                                               build_context=build_context))
+
+    return (settings_dict, builders)
