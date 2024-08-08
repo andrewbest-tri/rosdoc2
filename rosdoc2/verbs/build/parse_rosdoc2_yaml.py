@@ -12,17 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import yaml
 
-
-def parse_rosdoc2_yaml(yaml_string, build_context):
+def parse_rosdoc2_yaml(configs, build_context):
     """
     Parse a rosdoc2.yaml configuration string, returning it as a tuple of settings and builders.
 
     :return: a tuple with the first item being the tool settings as a dictionary,
         and the second item being a list of Builder objects.
     """
-    configs = list(yaml.load_all(yaml_string, Loader=yaml.SafeLoader))
     file_name = build_context.configuration_file_path
     if len(configs) != 2:
         raise ValueError(

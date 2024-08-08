@@ -14,6 +14,8 @@
 
 import os
 
+import yaml
+
 from .build_context import BuildContext
 from .builders import create_builder_by_name
 from .create_format_map_from_package import create_format_map_from_package
@@ -147,8 +149,9 @@ def inspect_package_for_settings(package, tool_options):
     for depends in package['buildtool_depends']:
         if str(depends) == 'ament_cmake_python':
             build_context.ament_cmake_python = True
+    configs = list(yaml.load_all(rosdoc_config_file, Loader=yaml.SafeLoader))
 
-    (settings_dict, builders_list) = parse_rosdoc2_yaml(rosdoc_config_file, build_context)
+    (settings_dict, builders_list) = parse_rosdoc2_yaml(configs, build_context)
     # if None, python_source is set to either './<package.name>' or 'src/<package.name>'
     build_context.python_source = settings_dict.get('python_source', None)
     build_context.always_run_doxygen = settings_dict.get('always_run_doxygen', False)
