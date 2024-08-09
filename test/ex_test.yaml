@@ -1,0 +1,10 @@
+---
+- docs_support:
+    invalid_python_source:
+      builders:
+        - sphinx:
+            user_doc_dir: funny_docs
+- python_location:
+    src_alt_python:
+      settings:
+        python_source: launch

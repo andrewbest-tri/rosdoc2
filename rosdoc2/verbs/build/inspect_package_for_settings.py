@@ -158,27 +158,27 @@ def inspect_package_for_settings(package, tool_options):
         with open(yaml_extend, 'r') as f:
             # Replace default with user supplied config file.
             yaml_extend_text = f.read()
-        extended_settings = list(yaml.load_all(yaml_extend_text, Loader=yaml.SafeLoader))
-        extended_object = None
+        extended_settings = yaml.load(yaml_extend_text, Loader=yaml.SafeLoader)
         for item in extended_settings:
-            if 'packages' in item:
-                if package.name in item['packages']:
-                    extended_object = item['packages'][package.name]
-        if extended_object:
-            if 'settings' in extended_object:
-                for key, value in extended_object['settings'].items():
-                    settings_dict[key] = value
-            if 'builders' in extended_object:
-                for ex_builder in extended_object['builders']:
-                    ex_builder_name = next(iter(ex_builder))
-                    # find this object in the builders list
-                    for user_builder in builders_list:
-                        user_builder_name = next(iter(user_builder))
-                        if user_builder_name == ex_builder_name:
-                            for builder_p, builder_v in ex_builder[ex_builder_name].items():
-                                logger.info(f'Overriding rosdoc2 builder <{ex_builder_name}> '
-                                            'property <{builder_p}> with <{builder_v}>')
-                                user_builder[user_builder_name][builder_p] = builder_v
+            ex_name = next(iter(item))
+            logger.info(f'Applying rosdoc2.yaml extension {ex_name}')
+            if package.name in item[ex_name]:
+                extended_object = item[ex_name][package.name]
+                if 'settings' in extended_object:
+                    for key, value in extended_object['settings'].items():
+                        settings_dict[key] = value
+                        logger.info(f'Overriding rosdoc2.yaml setting  <{key}> with <{value}>')
+                if 'builders' in extended_object:
+                    for ex_builder in extended_object['builders']:
+                        ex_builder_name = next(iter(ex_builder))
+                        # find this object in the builders list
+                        for user_builder in builders_list:
+                            user_builder_name = next(iter(user_builder))
+                            if user_builder_name == ex_builder_name:
+                                for builder_p, builder_v in ex_builder[ex_builder_name].items():
+                                    logger.info(f'Overriding rosdoc2 builder <{ex_builder_name}> '
+                                                f'property <{builder_p}> with <{builder_v}>')
+                                    user_builder[user_builder_name][builder_p] = builder_v
 
     # if None, python_source is set to either './<package.name>' or 'src/<package.name>'
     build_context.python_source = settings_dict.get('python_source', None)
