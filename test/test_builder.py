@@ -97,7 +97,7 @@ def test_full_package(module_dir):
 def test_default_yaml(module_dir):
     """Test a package with C++, python, and docs using specified default rosdoc2.yaml configs."""
     PKG_NAME = 'default_yaml'
-    do_build_package(DATAPATH / PKG_NAME, module_dir)
+    do_build_package(DATAPATH / PKG_NAME, module_dir, with_extension=True)
 
     do_test_full_package(module_dir, pkg_name=PKG_NAME)
 
