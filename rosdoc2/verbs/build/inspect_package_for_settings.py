@@ -85,7 +85,10 @@ builders:
         ## needed. Unlike sphinx_sourcedir, specifying this does not override the standard rosdoc2
         ## output, but includes this user documentation along with other items included by default
         ## by rosdoc2.
-        # user_doc_dir: 'doc'
+        # user_doc_dir: 'doc',
+        ## External URL to use for the "Documentation" section of the output.
+        # external_doc_url: null,
+
       }}
 """
 
