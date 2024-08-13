@@ -185,13 +185,16 @@ def test_only_messages(module_dir):
     """Test a package only containing messages."""
     PKG_NAME = 'only_messages'
 
-    do_build_package(DATAPATH / PKG_NAME, module_dir)
+    do_build_package(DATAPATH / PKG_NAME, module_dir, with_extension=True)
 
     includes = [
         PKG_NAME,
         'message definitions',
     ]
-    links_exist = ['interfaces/msg/NumPwrResult.html']
+    links_exist = [
+        'interfaces/msg/NumPwrResult.html',
+        'https://docs.ros.org',
+    ]
 
     do_test_package(PKG_NAME, module_dir, includes=includes, links_exist=links_exist)
 

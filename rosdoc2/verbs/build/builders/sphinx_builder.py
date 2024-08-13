@@ -347,6 +347,7 @@ class SphinxBuilder(Builder):
         self.output_dir = self.output_dir or ''
         self.sphinx_sourcedir = None
         self.user_doc_dir = None
+        self.external_doc_url = None
 
         # Must check for the existence of this later, as it may not have been made yet.
         self.doxygen_xml_directory = \
@@ -378,6 +379,9 @@ class SphinxBuilder(Builder):
                         f"to '{configuration_file_path}', or is not a directory.")
                 logger.info(f'The user specified user_doc_dir as {value}')
                 self.user_doc_dir = value
+            elif key == 'external_doc_url':
+                logger.info(f'The user specified external_doc_url as {value}')
+                self.external_doc_url = value
             else:
                 raise RuntimeError(f"Error the Sphinx builder does not support key '{key}'")
 
@@ -511,6 +515,7 @@ class SphinxBuilder(Builder):
             'has_readme': 'readme' in standard_docs,
             'interface_counts': interface_counts,
             'package': self.build_context.package,
+            'external_doc_url': self.external_doc_url,
         })
 
         # If the user did no include a conf.py, generate a default conf.py
