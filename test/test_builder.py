@@ -272,3 +272,17 @@ def test_src_alt_python(module_dir):
     do_test_package(PKG_NAME, module_dir,
                     includes=includes,
                     links_exist=links_exist)
+
+
+def test_rclcpp(module_dir):
+    """Tests of repo url lookup from a known standard package."""
+    PKG_NAME = 'rclcpp'
+    do_build_package(DATAPATH / PKG_NAME, module_dir)
+
+    includes = [
+        PKG_NAME,
+    ]
+
+    links_exist = ['https://github.com/ros2/rclcpp.git']  # Found repo url from rosdistro.
+    do_test_package(PKG_NAME, module_dir,
+                    includes=includes, links_exist=links_exist)
