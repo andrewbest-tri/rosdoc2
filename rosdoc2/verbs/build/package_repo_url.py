@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import logging
+import os
 
 from catkin_pkg.package import Url
 import rosdistro
@@ -25,9 +26,14 @@ def package_repo_url(package):
     for url in package.urls:
         if url.type == 'repository':
             return
+
+    # Only include repo url if ROS_DISTRO is known
+    distro = os.environ.get('ROS_DISTRO')
+    if not distro:
+        return
     try:
         index = rosdistro.get_index(rosdistro.get_index_url())
-        dist_file = rosdistro.get_distribution_file(index, 'rolling')
+        dist_file = rosdistro.get_distribution_file(index, distro)
         rosdistro_package = dist_file.release_packages[package.name]
         repo_name = rosdistro_package.repository_name
         repo = dist_file.repositories[repo_name]

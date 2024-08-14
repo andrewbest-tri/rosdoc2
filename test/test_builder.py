@@ -16,6 +16,7 @@
 
 import argparse
 import logging
+import os
 import pathlib
 
 import pytest
@@ -277,6 +278,7 @@ def test_src_alt_python(module_dir):
 def test_rclcpp(module_dir):
     """Tests of repo url lookup from a known standard package."""
     PKG_NAME = 'rclcpp'
+    os.environ['ROS_DISTRO'] = 'rolling'
     do_build_package(DATAPATH / PKG_NAME, module_dir)
 
     includes = [
