@@ -287,3 +287,33 @@ def test_rclcpp(module_dir):
     links_exist = ['https://github.com/ros2/rclcpp.git']  # Found repo url from rosdistro.
     do_test_package(PKG_NAME, module_dir,
                     includes=includes, links_exist=links_exist)
+
+
+def test_never_sphinx_apidoc(module_dir):
+    """Tests of never_run_sphinx_apidoc."""
+    PKG_NAME = 'never_sphinx_apidoc'
+    do_build_package(DATAPATH / PKG_NAME, module_dir)
+
+    includes = [
+        PKG_NAME,
+    ]
+
+    excludes = ['python api']  # No python api generated since never_run_sphinx_apidoc is set
+
+    do_test_package(PKG_NAME, module_dir,
+                    includes=includes, excludes=excludes)
+
+
+def test_never_doxygen(module_dir):
+    """Tests of never_run_doxygen."""
+    PKG_NAME = 'never_doxygen'
+    do_build_package(DATAPATH / PKG_NAME, module_dir)
+
+    includes = [
+        PKG_NAME,
+    ]
+
+    excludes = ['c++ api']  # No c++ api since never_run_doxygen set
+
+    do_test_package(PKG_NAME, module_dir,
+                    includes=includes, excludes=excludes)
