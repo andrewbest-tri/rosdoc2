@@ -37,8 +37,9 @@ def package_repo_url(package):
         rosdistro_package = dist_file.release_packages[package.name]
         repo_name = rosdistro_package.repository_name
         repo = dist_file.repositories[repo_name]
-        url = repo.source_repository.url
-        logger.info(f'Adding package repository url from rosdisto: {url}')
-        package.urls.append(Url(url, 'repository'))
+        if repo.source_repository and repo.source_repository.url:
+            url = repo.source_repository.url
+            logger.info(f'Adding package repository url from rosdisto: {url}')
+            package.urls.append(Url(url, 'repository'))
     except (KeyError, RuntimeError):
         logger.info('No package repo url found from rosdistro')
