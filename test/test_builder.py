@@ -317,3 +317,16 @@ def test_never_doxygen(module_dir):
 
     do_test_package(PKG_NAME, module_dir,
                     includes=includes, excludes=excludes)
+
+
+def test_user_jinja_full(module_dir):
+    PKG_NAME = 'user_jinja_full'
+    do_build_package(DATAPATH / PKG_NAME, module_dir)
+
+    includes = [
+        PKG_NAME,
+        'extra user link',  # a non-standard link from a user-supplied index.rst.jinja
+    ]
+
+    do_test_package(PKG_NAME, module_dir,
+                    includes=includes)
