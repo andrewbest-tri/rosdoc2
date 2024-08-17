@@ -192,7 +192,7 @@ def test_only_messages(module_dir):
         'message definitions',
     ]
     links_exist = [
-        'interfaces/msg/NumPwrResult.html',
+        'msg/NumPwrResult.html',  # a link to a defined message appears
         'https://docs.ros.org',
     ]
 
