@@ -55,6 +55,7 @@ def include_user_docs(rel_user_doc_directory: str,
         os.path.join(package_xml_directory, rel_user_doc_directory))
     doc_directories = []
     for root, dirs, files in os.walk(user_doc_directory):
+        print("/" * 120, dirs, "/" * 120)
         for file in files:
             # ensure a valid documentation file exists, directories might only contain resources.
             (_, ext) = os.path.splitext(file)
@@ -62,6 +63,11 @@ def include_user_docs(rel_user_doc_directory: str,
                 logger.debug(f'Found renderable documentation file in {root} named {file}')
                 doc_directories.append(os.path.relpath(root, user_doc_directory))
                 break
+            elif "conf.py" in files:
+                logger.debug(f'Found conf.py in {root}')
+                doc_directories.append(os.path.relpath(root, user_doc_directory))
+                break
+
         if 'index.rst' in files:
             # We assume that this index will also show any desired files in subdirectories
             dirs.clear()
